@@ -1,0 +1,42 @@
+enable: true
+furnaces:
+  1: # номер печки (улучшения) (не обязательно цифра)
+    x: -72
+    y: 40
+    z: 261
+    facing: west  # Может быть north (-Z), south (+Z), west (-X), east (+X)
+  2:
+    x: -72
+    y: 40
+    z: 260
+    facing: west
+  3:
+    x: -72
+    y: 40
+    z: 259
+    facing: west
+  4:
+    x: -72
+    y: 40
+    z: 258
+    facing: west
+  5:
+    x: -72
+    y: 41
+    z: 261
+    facing: west
+  6:
+    x: -72
+    y: 41
+    z: 260
+    facing: west
+  7:
+    x: -72
+    y: 41
+    z: 259
+    facing: west
+  8:
+    x: -72
+    y: 41
+    z: 258
+    facing: west
