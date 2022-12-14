@@ -46,16 +46,7 @@ public class FoundryFurnaceBlock {
             blockData = Blocks.FURNACE.getBlockData().set(FACING, facing);
         } else if (state == State.MELTS) {
             blockData = Blocks.LIT_FURNACE.getBlockData().set(FACING, facing);
-
-            /*NBTTagCompound compound = new NBTTagCompound();
-            compound.setShort("BurnTime", (short) 400);
-
-            WrapperPlayServerTileEntityData wrapper = new WrapperPlayServerTileEntityData();
-            wrapper.setLocation(new BlockPosition(loc.toVector()));
-            wrapper.setNbtData(NbtFactory.fromNMSCompound(compound));
-            wrapper.sendPacket(player);*/
-        }
-        else {
+        } else {
             blockData = Blocks.AIR.getBlockData();
             player.sendMessage(ChatColor.RED + "Если ты это видишь, сообщи админу пж (косяк с печками в плавильне)");
         }
