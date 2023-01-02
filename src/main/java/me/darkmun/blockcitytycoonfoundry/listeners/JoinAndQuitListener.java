@@ -1,49 +1,70 @@
 package me.darkmun.blockcitytycoonfoundry.listeners;
 
-import me.darkmun.blockcitytycoonfoundry.BlockCityTycoonFoundry;
-import me.darkmun.blockcitytycoonfoundry.Config;
 import me.darkmun.blockcitytycoonfoundry.FoundryFurnaceBlock;
 import me.darkmun.blockcitytycoonfoundry.commands.FoundryFurnaceCommand;
 import net.minecraft.server.v1_12_R1.EnumDirection;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.*;
 
 import static me.darkmun.blockcitytycoonfoundry.storages.Configs.mainConfig;
+import static me.darkmun.blockcitytycoonfoundry.storages.Configs.playersFurnacesDataConfig;
 
-public class JoinListener implements Listener {
+public class JoinAndQuitListener implements Listener {
 
     private final Set<String> furnaces = mainConfig.getConfigurationSection("furnaces").getKeys(false);
+    private static final int reservedEntityId = Integer.MAX_VALUE / 2;
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) { // вместо того, чтобы делать это onJoin можно сделать команду, которая активируется при покупке плавильни
         Player player = event.getPlayer();
         UUID playerUID = player.getUniqueId();
         Map<UUID, List<FoundryFurnaceBlock>> playersFurnaces = FoundryFurnaceCommand.getPlayersFurnaces();
 
         if (!playersFurnaces.containsKey(playerUID)) {
-            Bukkit.getLogger().info("Creating furnace blocks...");
-            List<FoundryFurnaceBlock> furnaceBlocks = createFoundryFurnaceBlocks(player.getWorld());
+            List<FoundryFurnaceBlock> furnaceBlocks = createFoundryFurnaceBlocks(player.getWorld(), playerUID);
             playersFurnaces.put(playerUID, furnaceBlocks);
-            Bukkit.getLogger().info("Created");
+        } else {
+            List<FoundryFurnaceBlock> furnaces = playersFurnaces.get(playerUID);
+            for (FoundryFurnaceBlock furnace : furnaces) {
+                furnace.continueMeltingTask();
+            }
         }
     }
 
-    private List<FoundryFurnaceBlock> createFoundryFurnaceBlocks(World world) {
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUID = player.getUniqueId();
+        Map<UUID, List<FoundryFurnaceBlock>> playersFurnaces = FoundryFurnaceCommand.getPlayersFurnaces();
+
+        List<FoundryFurnaceBlock> furnaces = playersFurnaces.get(playerUID);
+        for (FoundryFurnaceBlock furnace : furnaces) {
+            furnace.pauseMeltingTask();
+        }
+    }
+
+    private List<FoundryFurnaceBlock> createFoundryFurnaceBlocks(World world, UUID playerUID) {
         List<FoundryFurnaceBlock> furnaceBlocks = new ArrayList<>();
+        int entityId = reservedEntityId;
         for (String furnace : furnaces) {
             int x = mainConfig.getInt(String.format("furnaces.%s.x", furnace));
             int y = mainConfig.getInt(String.format("furnaces.%s.y", furnace));
             int z = mainConfig.getInt(String.format("furnaces.%s.z", furnace));
             EnumDirection facing = EnumDirection.valueOf(mainConfig.getString(String.format("furnaces.%s.facing", furnace)).toUpperCase());
-            furnaceBlocks.add(new FoundryFurnaceBlock(world, x, y, z, facing));
+            FoundryFurnaceBlock furnaceBlock = new FoundryFurnaceBlock(world, x, y, z, entityId++, facing, furnace);
+            String configState = playersFurnacesDataConfig.getConfig().getString(String.format("%s.furnaces.%s.state", playerUID, furnace));
+            if (configState != null) {
+                playersFurnacesDataConfig.getConfig().set(String.format("%s.furnaces.%s.state", playerUID, furnace), "PLACED_EMPTY");
+                furnaceBlock.setState(FoundryFurnaceBlock.State.PLACED_EMPTY);
+            }
+            furnaceBlocks.add(furnaceBlock);
         }
 
         for (FoundryFurnaceBlock furnaceBlock : furnaceBlocks) {

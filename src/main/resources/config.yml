@@ -1,4 +1,5 @@
 enable: true
+melting-time: 20
 furnaces:
   1: # номер печки (улучшения) (не обязательно цифра)
     x: -72

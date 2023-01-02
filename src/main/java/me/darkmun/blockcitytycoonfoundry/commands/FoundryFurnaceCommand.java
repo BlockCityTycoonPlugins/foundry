@@ -1,16 +1,11 @@
 package me.darkmun.blockcitytycoonfoundry.commands;
 
-import me.darkmun.blockcitytycoonfoundry.BlockCityTycoonFoundry;
-import me.darkmun.blockcitytycoonfoundry.Config;
 import me.darkmun.blockcitytycoonfoundry.FoundryFurnaceBlock;
-import net.minecraft.server.v1_12_R1.EnumDirection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -50,10 +45,10 @@ public class FoundryFurnaceCommand implements CommandExecutor {
                             FoundryFurnaceBlock furnace = playersFurnaces.get(playerUID).stream().filter(block -> block.getX() == x && block.getY() == y && block.getZ() == z).findAny().orElse(null);
                             assert furnace != null;
                             if (action.equals("add")) {
-                                furnace.setState(FoundryFurnaceBlock.State.PLACED);
+                                furnace.setState(FoundryFurnaceBlock.State.PLACED_EMPTY);
                             }
                             else {
-                                furnace.setState(FoundryFurnaceBlock.State.EMPTY);
+                                furnace.setState(FoundryFurnaceBlock.State.NOT_PLACED);
                             }
                             furnace.sendTo(player);
 
