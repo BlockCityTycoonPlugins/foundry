@@ -3,7 +3,6 @@ package me.darkmun.blockcitytycoonfoundry.listeners;
 import me.darkmun.blockcitytycoonfoundry.FoundryFurnaceBlock;
 import me.darkmun.blockcitytycoonfoundry.commands.FoundryFurnaceCommand;
 import net.minecraft.server.v1_12_R1.EnumDirection;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -3,7 +3,6 @@ package me.darkmun.blockcitytycoonfoundry;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import me.darkmun.blockcitytycoonfoundry.commands.TestCommand;
 import me.darkmun.blockcitytycoonfoundry.commands.FoundryFurnaceCommand;
 import me.darkmun.blockcitytycoonfoundry.listeners.BlockChangeListener;
 import me.darkmun.blockcitytycoonfoundry.listeners.FoundryFurnaceInteractionListener;
@@ -30,7 +29,6 @@ public final class BlockCityTycoonFoundry extends JavaPlugin {
             hookToVault();
             ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
-            getCommand("testfurnace").setExecutor(new TestCommand());
             getCommand("foundryfurnace").setExecutor(new FoundryFurnaceCommand());
 
             getServer().getPluginManager().registerEvents(new JoinAndQuitListener(), this);

@@ -4,7 +4,5 @@ main: me.darkmun.blockcitytycoonfoundry.BlockCityTycoonFoundry
 authors: [ Darkmun ]
 depend: [ ProtocolLib, PacketWrapper ]
 commands:
-  testfurnace:
-    description: asd
   foundryfurnace:
     description: Добавление печки в плавильню
