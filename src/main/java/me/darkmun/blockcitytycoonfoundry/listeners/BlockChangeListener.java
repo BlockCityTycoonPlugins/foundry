@@ -6,7 +6,6 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.darkmun.blockcitytycoonfoundry.FoundryFurnaceBlock;
 import me.darkmun.blockcitytycoonfoundry.commands.FoundryFurnaceCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -14,8 +13,8 @@ import java.util.UUID;
 
 public class BlockChangeListener extends PacketAdapter {
 
-    public BlockChangeListener(Plugin plugin, PacketType... types) {
-        super(plugin, types);
+    public BlockChangeListener(Plugin plugin) {
+        super(plugin, PacketType.Play.Server.BLOCK_CHANGE);
     }
 
     @Override
@@ -33,7 +32,7 @@ public class BlockChangeListener extends PacketAdapter {
 
         if (furnace != null) {
             if (!furnace.isSending()) {
-                Bukkit.getLogger().info("NOT SENDING");
+                //Bukkit.getLogger().info("NOT SENDING");
                 event.setCancelled(true);
             }
         }

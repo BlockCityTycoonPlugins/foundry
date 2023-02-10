@@ -21,7 +21,7 @@ public class FoundryFurnaceBlock {
         NOT_PLACED,
         PLACED_EMPTY,
         PLACED_MELTING,
-        PLACED_MELTED;
+        PLACED_MELTED
     }
     public static final long TICKS_PER_SECONDS = 20;
     public static final long MELTING_TIME = Configs.mainConfig.getLong("melting-time");
@@ -65,8 +65,9 @@ public class FoundryFurnaceBlock {
 
         item.setAmount(item.getAmount() - 1);
         meltingBlock = item.getType();
-
+        Bukkit.getLogger().info("Player " + player.getName() + ": " + meltingBlock.toString());
         meltingTask = new Task(() -> {  // не нравится так конечно делать (каждый раз создавать новый таск, хотя он один и тот же), но в классе блока содержать поле с игроком, мне больше не нравится
+            Bukkit.getLogger().info("Player " + player.getName() + ": " + meltingBlock.toString());
             meltedOut = convertMeltingBlockToMelted();
             meltingBlock = null;
             state = State.PLACED_MELTED;
@@ -155,9 +156,9 @@ public class FoundryFurnaceBlock {
     }
 
     private void removeMessageMeltedTo(Player player) {
-        WrapperPlayServerEntityDestroy wrapper = new WrapperPlayServerEntityDestroy();
-        wrapper.setEntityIds(new int[] {messageMeltedEntityId}); // можно создать поле в классе, а не создавать массив каждый раз
-        wrapper.sendPacket(player);
+        WrapperPlayServerEntityDestroy wrapperDestroyEntity = new WrapperPlayServerEntityDestroy();
+        wrapperDestroyEntity.setEntityIds(new int[] {messageMeltedEntityId}); // можно создать поле в классе, а не создавать массив каждый раз
+        wrapperDestroyEntity.sendPacket(player);
     }
 
     private double getMessageMeltedX() {

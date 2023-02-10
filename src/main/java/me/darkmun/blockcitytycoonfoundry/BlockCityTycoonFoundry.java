@@ -1,9 +1,9 @@
 package me.darkmun.blockcitytycoonfoundry;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.darkmun.blockcitytycoonfoundry.commands.FoundryFurnaceCommand;
+import me.darkmun.blockcitytycoonfoundry.commands.ReloadCommand;
 import me.darkmun.blockcitytycoonfoundry.listeners.BlockChangeListener;
 import me.darkmun.blockcitytycoonfoundry.listeners.FoundryFurnaceInteractionListener;
 import me.darkmun.blockcitytycoonfoundry.listeners.JoinAndQuitListener;
@@ -30,10 +30,11 @@ public final class BlockCityTycoonFoundry extends JavaPlugin {
             ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
             getCommand("foundryfurnace").setExecutor(new FoundryFurnaceCommand());
+            getCommand("bctfoundry").setExecutor(new ReloadCommand());
 
             getServer().getPluginManager().registerEvents(new JoinAndQuitListener(), this);
             getServer().getPluginManager().registerEvents(new FoundryFurnaceInteractionListener(), this);
-            manager.addPacketListener(new BlockChangeListener(this, PacketType.Play.Server.BLOCK_CHANGE));
+            manager.addPacketListener(new BlockChangeListener(this));
 
             getLogger().info("Plugin enabled.");
         } else {

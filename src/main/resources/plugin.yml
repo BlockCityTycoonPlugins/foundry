@@ -4,5 +4,7 @@ main: me.darkmun.blockcitytycoonfoundry.BlockCityTycoonFoundry
 authors: [ Darkmun ]
 depend: [ ProtocolLib, PacketWrapper ]
 commands:
+  bctfoundry:
+    description: Для перезагрузки конфигов
   foundryfurnace:
     description: Добавление печки в плавильню
