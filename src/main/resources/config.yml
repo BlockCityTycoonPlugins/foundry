@@ -1,5 +1,7 @@
 enable: true
 melting-time: 20
+melted-message: §6§lГотово!§r
+melted-error-message: §6§lОшибка§r
 furnaces:
   1: # номер печки (улучшения) (не обязательно цифра)
     x: -72

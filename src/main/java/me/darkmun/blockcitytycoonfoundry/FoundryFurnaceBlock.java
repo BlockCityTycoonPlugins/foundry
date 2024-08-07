@@ -63,12 +63,18 @@ public class FoundryFurnaceBlock {
         playersFurnacesDataConfig.getConfig().set(String.format("%s.furnaces.%s.state", player.getUniqueId(), name), state.name());
         playersFurnacesDataConfig.saveConfig();
 
-        item.setAmount(item.getAmount() - 1);
         meltingBlock = item.getType();
-        Bukkit.getLogger().info("Player " + player.getName() + ": " + meltingBlock.toString());
+        item.setAmount(item.getAmount() - 1);
+
         meltingTask = new Task(() -> {  // не нравится так конечно делать (каждый раз создавать новый таск, хотя он один и тот же), но в классе блока содержать поле с игроком, мне больше не нравится
-            Bukkit.getLogger().info("Player " + player.getName() + ": " + meltingBlock.toString());
-            meltedOut = convertMeltingBlockToMelted();
+            String messageAfterMelting = mainConfig.getString("melted-message");
+            try {
+                meltedOut = convertMeltingBlockToMelted();
+            } catch (WrongBlockException e) {
+                e.printStackTrace();
+                meltedOut = null;
+                messageAfterMelting = mainConfig.getString("melted-error-message");
+            }
             meltingBlock = null;
             state = State.PLACED_MELTED;
 
@@ -76,7 +82,7 @@ public class FoundryFurnaceBlock {
             Player pl = Bukkit.getPlayerExact(player.getName());
             if (pl != null) {  // по сути такого не может быть
                 sendTo(pl);
-                sendMeltedMessageTo(pl, mainConfig.getString("melted-message"));
+                sendMeltedMessageToPlayer(pl, messageAfterMelting);
             }
             playersFurnacesDataConfig.getConfig().set(String.format("%s.furnaces.%s.state", player.getUniqueId(), name), state.name());
             playersFurnacesDataConfig.saveConfig();
@@ -130,7 +136,7 @@ public class FoundryFurnaceBlock {
         sending = false;
     }
 
-    private void sendMeltedMessageTo(Player player, String message) { //destroy entity нужно
+    private void sendMeltedMessageToPlayer(Player player, String message) { //destroy entity нужно
 
 
 
@@ -189,7 +195,7 @@ public class FoundryFurnaceBlock {
         }
     }
 
-    public ItemStack convertMeltingBlockToMelted() {
+    public ItemStack convertMeltingBlockToMelted() throws WrongBlockException {
         switch (meltingBlock) {
             case IRON_ORE:
                 return new ItemStack(Material.IRON_INGOT);
@@ -208,7 +214,7 @@ public class FoundryFurnaceBlock {
             case EMERALD_BLOCK:
                 return new ItemStack(Material.EMERALD, 9);
             default:
-                throw new RuntimeException("Melting block can't be melted");
+                throw new WrongBlockException("Block " + meltingBlock.name() + " can't be melted");
         }
     }
 
